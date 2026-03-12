@@ -3,568 +3,734 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>JOY Dance</title>
+    <title>JOY Dance & Art Studio</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        /* ===== LIGHT THEME (white marble) ===== */
         :root {
-            --tg-theme-bg: var(--tg-theme-bg-color, #0a0a0f);
-            --tg-theme-text: var(--tg-theme-text-color, #f0f0f5);
-            --tg-theme-hint: var(--tg-theme-hint-color, #8888aa);
-            --tg-theme-button: var(--tg-theme-button-color, #c850ff);
-            --tg-theme-button-text: var(--tg-theme-button-text-color, #ffffff);
-            --tg-theme-secondary-bg: var(--tg-theme-secondary-bg-color, #16162a);
-
-            --accent: #c850ff;
-            --accent-warm: #ff6b9d;
-            --accent-glow: rgba(200, 80, 255, 0.3);
-            --surface: rgba(255, 255, 255, 0.04);
-            --surface-hover: rgba(255, 255, 255, 0.08);
-            --border: rgba(255, 255, 255, 0.06);
-            --radius: 20px;
+            --bg: #f0eded;
+            --text: #1a1a1a;
+            --text-soft: #2d2d2d;
+            --text-dim: #777;
+            --text-muted: #aaa;
+            --surface: rgba(255,255,255,0.88);
+            --surface-solid: rgba(255,255,255,0.94);
+            --surface-hover: rgba(0,0,0,0.03);
+            --border: rgba(0,0,0,0.08);
+            --pill-bg: rgba(255,255,255,0.8);
+            --active-bg: #1a1a1a;
+            --active-text: #ffffff;
+            --accent: #1a1a1a;
+            --booked-bg: rgba(0,0,0,0.02);
+            --booked-border: rgba(0,0,0,0.15);
+            --toast-bg: #1a1a1a;
+            --toast-text: #fff;
+            --modal-bg: #f5f2ef;
+            --shadow: rgba(0,0,0,0.12);
+            --vein1: rgba(0,0,0,0.06);
+            --vein2: rgba(0,0,0,0.04);
+            --vein3: rgba(0,0,0,0.03);
+            --vein-gold: rgba(140,120,80,0.05);
+            --marble-spot1: rgba(220,215,210,0.7);
+            --marble-spot2: rgba(200,195,188,0.4);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+        /* ===== DARK THEME (black marble) ===== */
+        .dark {
+            --bg: #111111;
+            --text: #e8e4df;
+            --text-soft: #ccc8c2;
+            --text-dim: #888480;
+            --text-muted: #5a5753;
+            --surface: rgba(255,255,255,0.06);
+            --surface-solid: rgba(255,255,255,0.08);
+            --surface-hover: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.08);
+            --pill-bg: rgba(255,255,255,0.06);
+            --active-bg: #e8e4df;
+            --active-text: #111111;
+            --accent: #e8e4df;
+            --booked-bg: rgba(255,255,255,0.04);
+            --booked-border: rgba(255,255,255,0.2);
+            --toast-bg: #e8e4df;
+            --toast-text: #111;
+            --modal-bg: #1a1a1a;
+            --shadow: rgba(0,0,0,0.4);
+            --vein1: rgba(255,255,255,0.04);
+            --vein2: rgba(255,255,255,0.03);
+            --vein3: rgba(255,255,255,0.025);
+            --vein-gold: rgba(180,160,110,0.06);
+            --marble-spot1: rgba(30,28,26,0.8);
+            --marble-spot2: rgba(40,37,34,0.5);
         }
+
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
         body {
-            font-family: 'Manrope', sans-serif;
-            background: var(--tg-theme-bg);
-            color: var(--tg-theme-text);
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
             overflow-x: hidden;
-            padding-bottom: 100px;
+            padding-bottom: 40px;
         }
 
-        /* === ANIMATED BACKGROUND === */
-        .bg-orbs {
+        /* ===== MARBLE TEXTURE via CSS ===== */
+        body::before {
+            content: '';
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
             pointer-events: none;
             z-index: 0;
-            overflow: hidden;
-        }
-        .bg-orbs .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.35;
-            animation: orbFloat 8s ease-in-out infinite;
-        }
-        .bg-orbs .orb:nth-child(1) {
-            width: 250px; height: 250px;
-            background: var(--accent);
-            top: -60px; right: -40px;
-            animation-delay: 0s;
-        }
-        .bg-orbs .orb:nth-child(2) {
-            width: 200px; height: 200px;
-            background: var(--accent-warm);
-            bottom: 20%; left: -50px;
-            animation-delay: -3s;
-        }
-        .bg-orbs .orb:nth-child(3) {
-            width: 150px; height: 150px;
-            background: #5b8cff;
-            top: 40%; right: -30px;
-            animation-delay: -5s;
+            background:
+                /* diagonal veins */
+                linear-gradient(125deg, transparent 20%, var(--vein1) 21%, transparent 23%),
+                linear-gradient(215deg, transparent 35%, var(--vein1) 36.2%, transparent 37.5%),
+                linear-gradient(160deg, transparent 50%, var(--vein2) 51%, transparent 52.5%),
+                linear-gradient(75deg, transparent 15%, var(--vein2) 16%, transparent 17.5%),
+                linear-gradient(195deg, transparent 60%, var(--vein1) 61%, transparent 62.5%),
+                linear-gradient(105deg, transparent 42%, var(--vein3) 43%, transparent 44.5%),
+                linear-gradient(250deg, transparent 28%, var(--vein2) 29%, transparent 30.5%),
+                linear-gradient(140deg, transparent 68%, var(--vein3) 69%, transparent 70.5%),
+                /* thin gold veins */
+                linear-gradient(132deg, transparent 30%, var(--vein-gold) 30.8%, transparent 31.5%),
+                linear-gradient(210deg, transparent 55%, var(--vein-gold) 55.6%, transparent 56.2%),
+                linear-gradient(85deg, transparent 72%, var(--vein-gold) 72.5%, transparent 73%),
+                /* branching veins */
+                linear-gradient(127deg, transparent 44%, var(--vein1) 44.8%, transparent 45.5%),
+                linear-gradient(135deg, transparent 44.5%, var(--vein3) 45.5%, transparent 46.5%),
+                linear-gradient(200deg, transparent 25%, var(--vein2) 25.6%, transparent 26.3%),
+                linear-gradient(205deg, transparent 26%, var(--vein3) 27%, transparent 28%),
+                /* marble clouds */
+                radial-gradient(ellipse 700px 500px at 25% 20%, var(--marble-spot1), transparent),
+                radial-gradient(ellipse 500px 700px at 75% 70%, var(--marble-spot2), transparent),
+                radial-gradient(ellipse 400px 300px at 60% 30%, var(--marble-spot1), transparent);
         }
 
-        @keyframes orbFloat {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(20px, -30px) scale(1.1); }
-            66% { transform: translate(-15px, 20px) scale(0.95); }
-        }
+        .app { position:relative; z-index:1; max-width:480px; margin:0 auto; }
 
-        /* === CONTENT === */
-        .content {
-            position: relative;
-            z-index: 1;
-            padding: 20px 16px;
-            max-width: 480px;
-            margin: 0 auto;
-        }
-
-        /* === HEADER === */
+        /* ===== HEADER ===== */
         .header {
             text-align: center;
-            padding: 30px 0 20px;
-            animation: fadeInDown 0.6s ease-out;
+            padding: 32px 20px 4px;
         }
-        .header .emoji-logo {
-            font-size: 52px;
-            margin-bottom: 12px;
-            display: inline-block;
-            animation: dancePulse 2s ease-in-out infinite;
+        .header .logo {
+            font-weight: 900;
+            font-size: 40px;
+            letter-spacing: 14px;
+            text-transform: uppercase;
+            color: var(--text);
+            line-height: 1;
         }
-        @keyframes dancePulse {
-            0%, 100% { transform: rotate(-5deg) scale(1); }
-            50% { transform: rotate(5deg) scale(1.1); }
+        .header .sub {
+            font-size: 9px;
+            letter-spacing: 7px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            font-weight: 700;
+            margin-top: 6px;
         }
-        .header h1 {
-            font-family: 'Unbounded', sans-serif;
-            font-weight: 800;
-            font-size: 28px;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-warm));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .header .greeting {
-            font-size: 15px;
-            color: var(--tg-theme-hint);
-            margin-top: 8px;
+        .greeting {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-dim);
+            margin: 14px 0 22px;
             font-weight: 500;
+            letter-spacing: 0.5px;
         }
 
-        /* === USER CARD === */
-        .user-card {
+        /* ===== TABS ===== */
+        .tabs {
+            display: flex;
+            margin: 0 16px 18px;
             background: var(--surface);
+            backdrop-filter: blur(16px);
+            border-radius: 12px;
+            padding: 3px;
             border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            margin: 20px 0;
+        }
+        .tab {
+            flex: 1;
+            padding: 11px 0;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 9px;
+            transition: all 0.25s ease;
+        }
+        .tab.active {
+            background: var(--active-bg);
+            color: var(--active-text);
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+
+        .section { display:none; padding:0 16px; }
+        .section.active { display:block; }
+
+        /* ===== CATEGORIES ===== */
+        .categories {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 0 0 14px;
+            scrollbar-width: none;
+        }
+        .categories::-webkit-scrollbar { display:none; }
+        .cat-pill {
+            flex-shrink: 0;
+            padding: 7px 15px;
+            border-radius: 30px;
+            border: 1.5px solid var(--border);
+            background: var(--pill-bg);
+            backdrop-filter: blur(8px);
+            color: var(--text-dim);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+        .cat-pill.active {
+            background: var(--active-bg);
+            border-color: var(--active-bg);
+            color: var(--active-text);
+        }
+
+        /* ===== DAY SELECTOR ===== */
+        .day-selector {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 16px;
+        }
+        .day-btn {
+            flex: 1;
+            padding: 11px 0;
+            border-radius: 10px;
+            border: 1.5px solid var(--border);
+            background: var(--pill-bg);
+            backdrop-filter: blur(8px);
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+        }
+        .day-btn.active {
+            background: var(--active-bg);
+            border-color: var(--active-bg);
+            color: var(--active-text);
+            box-shadow: 0 3px 12px var(--shadow);
+        }
+
+        /* ===== LESSONS LIST ===== */
+        .lessons-wrap {
+            background: var(--surface-solid);
+            backdrop-filter: blur(20px);
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .lesson-row {
+            padding: 15px 18px;
             display: flex;
             align-items: center;
             gap: 16px;
-            backdrop-filter: blur(20px);
-            animation: fadeInUp 0.6s ease-out 0.1s both;
-        }
-        .user-card .avatar {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--accent-warm));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Unbounded', sans-serif;
-            font-weight: 800;
-            font-size: 22px;
-            color: #fff;
-            flex-shrink: 0;
-        }
-        .user-card .user-info h3 {
-            font-family: 'Unbounded', sans-serif;
-            font-weight: 600;
-            font-size: 16px;
-        }
-        .user-card .user-info p {
-            color: var(--tg-theme-hint);
-            font-size: 13px;
-            margin-top: 2px;
-        }
-
-        /* === SECTION TITLE === */
-        .section-title {
-            font-family: 'Unbounded', sans-serif;
-            font-weight: 600;
-            font-size: 18px;
-            margin: 28px 0 14px;
-            padding-left: 4px;
-        }
-
-        /* === DANCE CARDS === */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        .dance-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 22px 16px;
-            text-align: center;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(20px);
-            position: relative;
-            overflow: hidden;
+            transition: background 0.15s ease;
+            border-bottom: 1px solid var(--border);
         }
-        .dance-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: linear-gradient(135deg, var(--accent-glow), transparent);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .dance-card:active {
-            transform: scale(0.96);
-        }
-        .dance-card:active::before {
-            opacity: 1;
-        }
-        .dance-card .card-emoji {
-            font-size: 36px;
-            display: block;
-            margin-bottom: 10px;
-        }
-        .dance-card .card-title {
-            font-family: 'Unbounded', sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 4px;
-            position: relative;
-        }
-        .dance-card .card-desc {
-            font-size: 12px;
-            color: var(--tg-theme-hint);
-            position: relative;
-        }
-        .dance-card.selected {
-            border-color: var(--accent);
-            box-shadow: 0 0 20px var(--accent-glow);
-        }
-        .dance-card.selected::before {
-            opacity: 0.5;
-        }
+        .lesson-row:last-child { border-bottom: none; }
+        .lesson-row:active { background: var(--surface-hover); }
+        .lesson-row.booked { background: var(--booked-bg); }
 
-        /* === SCHEDULE LIST === */
-        .schedule-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .schedule-item {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 16px 18px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            backdrop-filter: blur(20px);
-        }
-        .schedule-item:active {
-            transform: scale(0.98);
-            background: var(--surface-hover);
-        }
-        .schedule-item .time-block {
-            background: linear-gradient(135deg, var(--accent), var(--accent-warm));
-            border-radius: 12px;
-            padding: 8px 12px;
-            text-align: center;
-            min-width: 60px;
-            flex-shrink: 0;
-        }
-        .schedule-item .time-block .time {
-            font-family: 'Unbounded', sans-serif;
-            font-weight: 800;
+        .l-time {
+            min-width: 50px;
+            font-weight: 900;
             font-size: 15px;
-            color: #fff;
-        }
-        .schedule-item .time-block .day {
-            font-size: 10px;
-            color: rgba(255,255,255,0.8);
-            font-weight: 600;
-            text-transform: uppercase;
+            color: var(--text);
             letter-spacing: 0.5px;
-        }
-        .schedule-item .lesson-info h4 {
-            font-weight: 600;
-            font-size: 15px;
-        }
-        .schedule-item .lesson-info p {
-            color: var(--tg-theme-hint);
-            font-size: 12px;
-            margin-top: 2px;
-        }
-        .schedule-item .arrow {
-            margin-left: auto;
-            color: var(--tg-theme-hint);
-            font-size: 18px;
             flex-shrink: 0;
         }
-
-        /* === MAIN BUTTON AREA === */
-        .bottom-action {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 16px 20px;
-            padding-bottom: max(16px, env(safe-area-inset-bottom));
-            background: linear-gradient(to top, var(--tg-theme-bg) 60%, transparent);
-            z-index: 10;
+        .l-info { flex:1; min-width:0; }
+        .l-name {
+            font-weight: 800;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text);
+            line-height: 1.4;
         }
-        .btn-primary {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 14px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-warm));
-            color: #fff;
-            font-family: 'Unbounded', sans-serif;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.25s ease;
+        .l-meta {
+            font-size: 10px;
+            color: var(--text-dim);
+            font-weight: 500;
+            margin-top: 2px;
             letter-spacing: 0.3px;
         }
-        .btn-primary:active {
-            transform: scale(0.97);
-            opacity: 0.9;
+        .l-badge {
+            font-size: 9px;
+            padding: 3px 9px;
+            border-radius: 20px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            flex-shrink: 0;
         }
-        .btn-primary:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none;
+        .badge-booked {
+            border: 1.5px solid var(--booked-border);
+            color: var(--text-dim);
+        }
+        .badge-closed {
+            border: 1px solid var(--border);
+            color: var(--text-muted);
         }
 
-        /* === STATUS TOAST === */
-        .toast {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-120%);
-            background: var(--tg-theme-secondary-bg);
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== PRICING ===== */
+        .sec-heading {
+            font-weight: 900;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--text);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .price-card {
+            background: var(--surface-solid);
+            backdrop-filter: blur(16px);
             border: 1px solid var(--border);
             border-radius: 14px;
-            padding: 12px 24px;
-            font-size: 14px;
-            font-weight: 500;
-            z-index: 100;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(20px);
-            white-space: nowrap;
+            padding: 22px 20px;
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.25s ease;
         }
-        .toast.visible {
-            transform: translateX(-50%) translateY(0);
+        .price-card:active { transform: scale(0.985); }
+        .price-card.popular {
+            border-color: var(--text);
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+        .price-card .pop-tag {
+            position: absolute;
+            top: 12px; right: 14px;
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--active-text);
+            background: var(--active-bg);
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+        .price-card .p-name {
+            font-weight: 900;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text);
+            margin-bottom: 3px;
+        }
+        .price-card .p-desc {
+            font-size: 12px;
+            color: var(--text-dim);
+            margin-bottom: 14px;
+            font-weight: 400;
+        }
+        .price-card .p-price {
+            font-weight: 900;
+            font-size: 30px;
+            color: var(--text);
+            letter-spacing: 1px;
+        }
+        .price-card .p-price .cur {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dim);
+        }
+        .price-card .p-period {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 2px;
+        }
+        .price-card .p-features {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+        .price-card .feat {
+            font-size: 11px;
+            padding: 3px 0;
+            color: var(--text-dim);
+            font-weight: 500;
+        }
+        .price-card .feat::before {
+            content: '— ';
+            color: var(--text-muted);
         }
 
-        /* === ANIMATIONS === */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top:0;left:0;width:100%;height:100%;
+            background: rgba(0,0,0,0.45);
+            z-index: 50;
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.2s ease;
         }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .modal-overlay.active { display:flex; align-items:flex-end; }
+        .modal {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--modal-bg);
+            border-radius: 20px 20px 0 0;
+            padding: 26px 22px;
+            padding-bottom: max(26px, env(safe-area-inset-bottom));
+            animation: slideUp 0.35s cubic-bezier(0.16,1,0.3,1);
         }
-        .stagger-1 { animation: fadeInUp 0.5s ease-out 0.15s both; }
-        .stagger-2 { animation: fadeInUp 0.5s ease-out 0.25s both; }
-        .stagger-3 { animation: fadeInUp 0.5s ease-out 0.35s both; }
-        .stagger-4 { animation: fadeInUp 0.5s ease-out 0.45s both; }
-        .stagger-5 { animation: fadeInUp 0.5s ease-out 0.55s both; }
-        .stagger-6 { animation: fadeInUp 0.5s ease-out 0.65s both; }
+        @keyframes slideUp { from { transform:translateY(100%); } }
+        @keyframes fadeIn { from { opacity:0; } }
+        .modal-handle {
+            width: 36px; height: 3px;
+            background: var(--text-muted);
+            border-radius: 3px;
+            margin: 0 auto 20px;
+            opacity: 0.4;
+        }
+        .modal h3 {
+            font-weight: 900;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+        .modal .m-meta {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 22px;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+        .modal .m-meta strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+        .btn-book {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: var(--active-bg);
+            color: var(--active-text);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .btn-book:active { transform:scale(0.97); opacity:0.85; }
+        .btn-cancel {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            margin-top: 6px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            top: 14px; left: 50%;
+            transform: translateX(-50%) translateY(-120%);
+            background: var(--toast-bg);
+            color: var(--toast-text);
+            border-radius: 10px;
+            padding: 11px 26px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            z-index: 100;
+            transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+            white-space: nowrap;
+        }
+        .toast.visible { transform:translateX(-50%) translateY(0); }
+
+        .fade-in { animation: fadeInUp 0.45s ease-out both; }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)} }
+        .s1{animation-delay:.04s}.s2{animation-delay:.08s}.s3{animation-delay:.12s}.s4{animation-delay:.16s}
     </style>
 </head>
 <body>
-    <div class="bg-orbs">
-        <div class="orb"></div>
-        <div class="orb"></div>
-        <div class="orb"></div>
+<div class="app">
+    <div class="header fade-in">
+        <div class="logo">JOY</div>
+        <div class="sub">dance & art studio</div>
     </div>
-
-    <div class="content">
-        <!-- Header -->
-        <div class="header">
-            <span class="emoji-logo">💃</span>
-            <h1>JOY Dance</h1>
-            <p class="greeting" id="greeting">Добро пожаловать!</p>
-        </div>
-
-        <!-- User Card -->
-        <div class="user-card" id="userCard" style="display: none;">
-            <div class="avatar" id="avatar">?</div>
-            <div class="user-info">
-                <h3 id="userName">Гость</h3>
-                <p id="userStatus">Новый ученик</p>
-            </div>
-        </div>
-
-        <!-- Dance Styles -->
-        <h2 class="section-title stagger-1">🎵 Стиль танца</h2>
-        <div class="cards-grid">
-            <div class="dance-card stagger-2" data-style="hiphop" onclick="selectStyle(this)">
-                <span class="card-emoji">🔥</span>
-                <div class="card-title">Hip-Hop</div>
-                <div class="card-desc">Уличный стиль</div>
-            </div>
-            <div class="dance-card stagger-3" data-style="contemporary" onclick="selectStyle(this)">
-                <span class="card-emoji">🌊</span>
-                <div class="card-title">Contemporary</div>
-                <div class="card-desc">Современный</div>
-            </div>
-            <div class="dance-card stagger-4" data-style="kpop" onclick="selectStyle(this)">
-                <span class="card-emoji">⚡</span>
-                <div class="card-title">K-Pop</div>
-                <div class="card-desc">Кавер-танцы</div>
-            </div>
-            <div class="dance-card stagger-5" data-style="stretching" onclick="selectStyle(this)">
-                <span class="card-emoji">🧘</span>
-                <div class="card-title">Stretching</div>
-                <div class="card-desc">Растяжка</div>
-            </div>
-        </div>
-
-        <!-- Schedule -->
-        <h2 class="section-title stagger-5">📅 Ближайшие занятия</h2>
-        <div class="schedule-list">
-            <div class="schedule-item stagger-5" onclick="selectLesson('hiphop-mon')">
-                <div class="time-block">
-                    <div class="time">18:00</div>
-                    <div class="day">Пн</div>
-                </div>
-                <div class="lesson-info">
-                    <h4>Hip-Hop Начинающие</h4>
-                    <p>Зал 1 · Анна К.</p>
-                </div>
-                <span class="arrow">›</span>
-            </div>
-            <div class="schedule-item stagger-6" onclick="selectLesson('contemporary-wed')">
-                <div class="time-block">
-                    <div class="time">19:30</div>
-                    <div class="day">Ср</div>
-                </div>
-                <div class="lesson-info">
-                    <h4>Contemporary</h4>
-                    <p>Зал 2 · Мария Л.</p>
-                </div>
-                <span class="arrow">›</span>
-            </div>
-            <div class="schedule-item stagger-6" onclick="selectLesson('kpop-fri')">
-                <div class="time-block">
-                    <div class="time">17:00</div>
-                    <div class="day">Пт</div>
-                </div>
-                <div class="lesson-info">
-                    <h4>K-Pop Dance</h4>
-                    <p>Зал 1 · Дима С.</p>
-                </div>
-                <span class="arrow">›</span>
-            </div>
-        </div>
+    <div class="greeting fade-in s1" id="greeting">Добро пожаловать</div>
+    <div class="tabs fade-in s2">
+        <button class="tab active" onclick="switchTab('schedule',this)">Расписание</button>
+        <button class="tab" onclick="switchTab('pricing',this)">Абонементы</button>
     </div>
-
-    <!-- Bottom action -->
-    <div class="bottom-action">
-        <button class="btn-primary" id="mainBtn" onclick="submitBooking()" disabled>
-            Выберите стиль или занятие
-        </button>
+    <div class="section active" id="sec-schedule">
+        <div class="categories fade-in s3" id="cats"></div>
+        <div class="day-selector fade-in s4" id="days"></div>
+        <div id="list"></div>
     </div>
+    <div class="section" id="sec-pricing"></div>
+</div>
 
-    <!-- Toast -->
-    <div class="toast" id="toast"></div>
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)hideModal()">
+    <div class="modal">
+        <div class="modal-handle"></div>
+        <h3 id="mTitle"></h3>
+        <div class="m-meta" id="mMeta"></div>
+        <button class="btn-book" id="mBtn" onclick="confirm()">Записаться</button>
+        <button class="btn-cancel" onclick="hideModal()">Отмена</button>
+    </div>
+</div>
+<div class="toast" id="toast"></div>
 
-    <script>
-        // ============ TELEGRAM INIT ============
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand();
+<script>
+// ===== TELEGRAM INIT =====
+const tg = window.Telegram.WebApp;
+tg.ready(); tg.expand();
 
-        // Adapt colors from Telegram theme
-        const root = document.documentElement;
-        if (tg.themeParams.bg_color) {
-            root.style.setProperty('--tg-theme-bg', tg.themeParams.bg_color);
-        }
-        if (tg.themeParams.text_color) {
-            root.style.setProperty('--tg-theme-text', tg.themeParams.text_color);
-        }
-        if (tg.themeParams.hint_color) {
-            root.style.setProperty('--tg-theme-hint', tg.themeParams.hint_color);
-        }
-        if (tg.themeParams.button_color) {
-            root.style.setProperty('--tg-theme-button', tg.themeParams.button_color);
-        }
-        if (tg.themeParams.secondary_bg_color) {
-            root.style.setProperty('--tg-theme-secondary-bg', tg.themeParams.secondary_bg_color);
-        }
+// ===== THEME DETECTION =====
+function applyTheme() {
+    const cs = tg.colorScheme || 'light';
+    if (cs === 'dark') {
+        document.body.classList.add('dark');
+        try { tg.setHeaderColor('#111111'); tg.setBackgroundColor('#111111'); } catch(e) {}
+    } else {
+        document.body.classList.remove('dark');
+        try { tg.setHeaderColor('#f0eded'); tg.setBackgroundColor('#f0eded'); } catch(e) {}
+    }
+}
+applyTheme();
+tg.onEvent('themeChanged', applyTheme);
 
-        // ============ USER DATA ============
-        const user = tg.initDataUnsafe?.user;
-        if (user) {
-            const card = document.getElementById('userCard');
-            card.style.display = 'flex';
+const user = tg.initDataUnsafe?.user;
+if (user) document.getElementById('greeting').textContent = `Добро пожаловать, ${user.first_name}`;
 
-            const name = user.first_name + (user.last_name ? ' ' + user.last_name : '');
-            document.getElementById('userName').textContent = name;
-            document.getElementById('avatar').textContent = name.charAt(0).toUpperCase();
-            document.getElementById('greeting').textContent = `Привет, ${user.first_name}! 👋`;
-        }
+// ===== DATA =====
+const CATS = [
+    {id:'all', name:'Все'},
+    {id:'high-heels', name:'High Heels'},
+    {id:'jazz-funk', name:'Jazz-Funk'},
+    {id:'contemporary', name:'Contemporary'},
+    {id:'strip', name:'Strip / Frame Up'},
+    {id:'hip-hop', name:'Hip-Hop'},
+    {id:'stretch', name:'Растяжка / МФР'},
+    {id:'kids', name:'Kids'},
+    {id:'latina', name:'Latina'},
+    {id:'vogue', name:'Vogue'},
+    {id:'twerk', name:'Twerk'},
+    {id:'zumba', name:'Zumba'},
+];
+const DAYS = ['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'];
 
-        // ============ STATE ============
-        let selectedStyle = null;
-        let selectedLesson = null;
+const LL = [
+    // ПН
+    {id:'m1',name:'МФР',cat:'stretch',days:['ПН'],time:'12:00'},
+    {id:'m2',name:'High Heels',cat:'high-heels',days:['ПН'],time:'13:00'},
+    {id:'m3',name:'Jazz-Funk Base',cat:'jazz-funk',days:['ПН'],time:'19:00'},
+    {id:'m4',name:'МФР',cat:'stretch',days:['ПН'],time:'19:00'},
+    {id:'m5',name:'Jazz-Funk',cat:'jazz-funk',days:['ПН'],time:'20:00'},
+    {id:'m6',name:'Latina',cat:'latina',days:['ПН'],time:'20:00'},
+    {id:'m7',name:'High Heels',cat:'high-heels',days:['ПН'],time:'21:00'},
+    // ВТ
+    {id:'t1',name:'Baby Dance',cat:'kids',days:['ВТ'],time:'17:00'},
+    {id:'t2',name:'Joy Kids',cat:'kids',days:['ВТ'],time:'18:00'},
+    {id:'t3',name:'Stretching',cat:'stretch',days:['ВТ'],time:'18:00'},
+    {id:'t4',name:'Jazz-Funk',cat:'jazz-funk',days:['ВТ'],time:'19:00'},
+    {id:'t5',name:'Contemporary',cat:'contemporary',days:['ВТ'],time:'19:00'},
+    {id:'t6',name:"Lady's Dance",cat:'high-heels',days:['ВТ'],time:'20:00'},
+    {id:'t7',name:'Vogue',cat:'vogue',days:['ВТ'],time:'20:00'},
+    {id:'t8',name:'Twerk',cat:'twerk',days:['ВТ'],time:'21:00'},
+    {id:'t9',name:'High Heels',cat:'high-heels',days:['ВТ'],time:'21:00'},
+    // СР
+    {id:'w1',name:'Jazz-Funk 8-12',cat:'kids',days:['СР'],time:'17:00'},
+    {id:'w2',name:'Jazz-Funk Teens',cat:'kids',days:['СР'],time:'18:00'},
+    {id:'w3',name:'Girly Hip-Hop',cat:'hip-hop',days:['СР'],time:'19:00'},
+    {id:'w4',name:'Jazz-Funk Base',cat:'jazz-funk',days:['СР'],time:'19:00'},
+    {id:'w5',name:'МФР',cat:'stretch',days:['СР'],time:'20:00'},
+    {id:'w6',name:'Frame Up Strip',cat:'strip',days:['СР'],time:'20:00'},
+    {id:'w7',name:'Frame Up Strip',cat:'strip',days:['СР'],time:'21:00'},
+    {id:'w8',name:'High Heels',cat:'high-heels',days:['СР'],time:'21:00'},
+    // ЧТ
+    {id:'r1',name:'МФР',cat:'stretch',days:['ЧТ'],time:'12:00'},
+    {id:'r2',name:'High Heels',cat:'high-heels',days:['ЧТ'],time:'13:00'},
+    {id:'r3',name:'Joy Kids',cat:'kids',days:['ЧТ'],time:'18:00'},
+    {id:'r4',name:'Jazz-Funk Teens',cat:'kids',days:['ЧТ'],time:'18:00'},
+    {id:'r5',name:'Jazz-Funk',cat:'jazz-funk',days:['ЧТ'],time:'19:00'},
+    {id:'r6',name:'Zumba',cat:'zumba',days:['ЧТ'],time:'19:00'},
+    {id:'r7',name:"Lady's Dance",cat:'high-heels',days:['ЧТ'],time:'20:00'},
+    {id:'r8',name:'Vogue',cat:'vogue',days:['ЧТ'],time:'20:00'},
+    {id:'r9',name:'Twerk',cat:'twerk',days:['ЧТ'],time:'21:00'},
+    {id:'r10',name:'High Heels',cat:'high-heels',days:['ЧТ'],time:'21:00'},
+    // ПТ
+    {id:'f1',name:'Jazz-Funk 8-12',cat:'kids',days:['ПТ'],time:'17:00'},
+    {id:'f2',name:'Jazz-Funk Teens',cat:'kids',days:['ПТ'],time:'18:00'},
+    {id:'f3',name:'Jazz-Funk Base',cat:'jazz-funk',days:['ПТ'],time:'19:00'},
+    {id:'f4',name:'Girly Hip-Hop',cat:'hip-hop',days:['ПТ'],time:'19:00'},
+    {id:'f5',name:'Латина',cat:'latina',days:['ПТ'],time:'20:00'},
+    {id:'f6',name:'МФР',cat:'stretch',days:['ПТ'],time:'20:00'},
+    {id:'f7',name:'High Heels',cat:'high-heels',days:['ПТ'],time:'21:00'},
+    // СБ
+    {id:'s1',name:'Baby Dance',cat:'kids',days:['СБ'],time:'11:00'},
+    {id:'s2',name:'Zumba',cat:'zumba',days:['СБ'],time:'11:00'},
+    {id:'s3',name:'МФР',cat:'stretch',days:['СБ'],time:'12:00'},
+    {id:'s4',name:'High Heels',cat:'high-heels',days:['СБ'],time:'13:00'},
+    {id:'s5',name:'Латина в парке',cat:'latina',days:['СБ'],time:'18:00'},
+    // ВС
+    {id:'u1',name:'Latina',cat:'latina',days:['ВС'],time:'11:00'},
+    {id:'u2',name:'Latina',cat:'latina',days:['ВС'],time:'12:00'},
+    {id:'u3',name:'Frame Up Strip',cat:'strip',days:['ВС'],time:'15:00'},
+    {id:'u4',name:'Frame Up Strip',cat:'strip',days:['ВС'],time:'16:00'},
+    {id:'u5',name:'Stretching',cat:'stretch',days:['ВС'],time:'17:00'},
+    {id:'u6',name:'Contemporary',cat:'contemporary',days:['ВС'],time:'18:00'},
+    {id:'u7',name:'Jazz-Funk Teens',cat:'kids',days:['ВС'],time:'18:00'},
+];
 
-        // ============ INTERACTIONS ============
-        function selectStyle(el) {
-            // Haptic feedback
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+const PRICING = [
+    {name:'Разовое',desc:'Одно занятие',price:600,period:'за занятие',feat:['Любое направление','Без привязки']},
+    {name:'4 занятия',desc:'Одно направление',price:2000,period:'4 занятия / 30 дней',feat:['Срок 30 дней','Заморозка 3 дня']},
+    {name:'8 занятий',desc:'Самый популярный',price:3600,period:'8 занятий / 30 дней',feat:['Любые направления','Заморозка 7 дней'],pop:true},
+    {name:'12 занятий',desc:'Для продвинутых',price:4800,period:'12 занятий / 30 дней',feat:['Любые направления','Заморозка 10 дней','Приоритетная запись']},
+    {name:'Безлимит',desc:'Без ограничений',price:6000,period:'в месяц',feat:['Безлимит посещений','Все направления','Заморозка 14 дней','Приоритет']},
+];
 
-            document.querySelectorAll('.dance-card').forEach(c => c.classList.remove('selected'));
-            el.classList.add('selected');
-            selectedStyle = el.dataset.style;
-            selectedLesson = null;
+// ===== STATE =====
+let aCat='all', aDay=null, booked=new Set(), cur=null;
 
-            updateButton();
-        }
+function init(){
+    const d=new Date().getDay();
+    aDay=DAYS[[6,0,1,2,3,4,5][d]];
+    rCats(); rDays(); rList(); rPrice();
+}
 
-        function selectLesson(lessonId) {
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+function rCats(){
+    document.getElementById('cats').innerHTML=CATS.map(c=>
+        `<button class="cat-pill${c.id===aCat?' active':''}" onclick="sCat('${c.id}')">${c.name}</button>`
+    ).join('');
+}
+function rDays(){
+    document.getElementById('days').innerHTML=DAYS.map(d=>
+        `<button class="day-btn${d===aDay?' active':''}" onclick="sDay('${d}')">${d}</button>`
+    ).join('');
+}
+function rList(){
+    const el=document.getElementById('list');
+    let f=LL.filter(l=>l.days.includes(aDay));
+    if(aCat!=='all') f=f.filter(l=>l.cat===aCat);
+    f.sort((a,b)=>a.time.localeCompare(b.time));
+    if(!f.length){el.innerHTML='<div class="empty-state">Нет занятий</div>';return}
+    el.innerHTML='<div class="lessons-wrap">'+f.map((l,i)=>{
+        const bk=booked.has(l.id);
+        let badge='';
+        if(bk) badge='<span class="l-badge badge-booked">Записан</span>';
+        return`<div class="lesson-row${bk?' booked':''}" onclick="openB('${l.id}')">
+            <div class="l-time">${l.time}</div>
+            <div class="l-info"><div class="l-name">${l.name}</div><div class="l-meta">${cName(l.cat)}</div></div>
+            ${badge}</div>`;
+    }).join('')+'</div>';
+}
+function rPrice(){
+    document.getElementById('sec-pricing').innerHTML=
+        '<div class="sec-heading fade-in">Абонементы</div>'+
+        PRICING.map((p,i)=>
+            `<div class="price-card fade-in${p.pop?' popular':''}" style="animation-delay:${i*.05}s" onclick="buyP('${p.name}',${p.price})">
+                ${p.pop?'<div class="pop-tag">Хит</div>':''}
+                <div class="p-name">${p.name}</div>
+                <div class="p-desc">${p.desc}</div>
+                <div class="p-price">${p.price.toLocaleString('ru')} <span class="cur">₽</span></div>
+                <div class="p-period">${p.period}</div>
+                <div class="p-features">${p.feat.map(f=>`<div class="feat">${f}</div>`).join('')}</div>
+            </div>`
+        ).join('');
+}
 
-            selectedLesson = lessonId;
-            showToast('✅ Занятие выбрано');
-            updateButton();
-        }
+function switchTab(t,el){
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('sec-'+t).classList.add('active');
+    hap('light');
+}
+function sCat(id){aCat=id;rCats();rList();hap('light')}
+function sDay(d){aDay=d;rDays();rList();hap('light')}
+function cName(id){const c=CATS.find(x=>x.id===id);return c?c.name:''}
 
-        function updateButton() {
-            const btn = document.getElementById('mainBtn');
-            if (selectedLesson) {
-                btn.disabled = false;
-                btn.textContent = '📝 Записаться на занятие';
-            } else if (selectedStyle) {
-                btn.disabled = false;
-                btn.textContent = '🔍 Показать расписание ' + getStyleName(selectedStyle);
-            } else {
-                btn.disabled = true;
-                btn.textContent = 'Выберите стиль или занятие';
-            }
-        }
+function openB(lid){
+    const l=LL.find(x=>x.id===lid);if(!l)return;
+    cur=l; hap('medium');
+    const bk=booked.has(lid);
+    document.getElementById('mTitle').textContent=l.name;
+    document.getElementById('mMeta').innerHTML=
+        `<strong>Время:</strong> ${l.time}, ${aDay}<br>`+
+        `<strong>Направление:</strong> ${cName(l.cat)}`;
+    const btn=document.getElementById('mBtn');
+    if(bk){btn.textContent='Отменить запись';btn.style.background='var(--surface)';btn.style.color='var(--text-dim)'}
+    else{btn.textContent='Записаться';btn.style.background='var(--active-bg)';btn.style.color='var(--active-text)'}
+    document.getElementById('modal').classList.add('active');
+}
+function hideModal(){document.getElementById('modal').classList.remove('active');cur=null}
+function confirm(){
+    if(!cur)return;
+    const bk=booked.has(cur.id);
+    if(bk){booked.delete(cur.id);showToast('Запись отменена');hap('warning','n')}
+    else{booked.add(cur.id);showToast('✓ Вы записаны');hap('success','n')}
+    const data={action:bk?'cancel':'book',lesson_id:cur.id,name:cur.name,day:aDay,time:cur.time,
+        user_id:user?.id||null,user_name:user?(user.first_name+(user.last_name?' '+user.last_name:'')):''};
+    try{tg.sendData(JSON.stringify(data))}catch(e){}
+    hideModal();rList();
+}
+function buyP(name,price){
+    hap('medium');
+    try{tg.sendData(JSON.stringify({action:'buy_plan',plan:name,price,user_id:user?.id||null,
+        user_name:user?(user.first_name+(user.last_name?' '+user.last_name:'')):''}))}catch(e){}
+    showToast('Запрос отправлен');
+}
+function hap(t,m){try{m==='n'?tg.HapticFeedback.notificationOccurred(t):tg.HapticFeedback.impactOccurred(t)}catch(e){}}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('visible');setTimeout(()=>t.classList.remove('visible'),2500)}
 
-        function getStyleName(style) {
-            const names = {
-                hiphop: 'Hip-Hop',
-                contemporary: 'Contemporary',
-                kpop: 'K-Pop',
-                stretching: 'Stretching'
-            };
-            return names[style] || style;
-        }
-
-        function submitBooking() {
-            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-
-            const data = {
-                action: selectedLesson ? 'book_lesson' : 'view_schedule',
-                style: selectedStyle,
-                lesson: selectedLesson,
-                user_id: user?.id || null
-            };
-
-            // Отправляем данные боту
-            tg.sendData(JSON.stringify(data));
-        }
-
-        // ============ TOAST ============
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('visible');
-            setTimeout(() => toast.classList.remove('visible'), 2500);
-        }
-    </script>
+init();
+</script>
 </body>
 </html>
